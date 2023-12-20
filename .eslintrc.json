@@ -1,0 +1,26 @@
+{
+  "plugins": ["@typescript-eslint", "prettier"],
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@next/next/no-img-element": "off",
+    "prefer-const": "off",
+
+    // ./src/pages/_app.tsx
+    // 10:36  Error: Don't use `{}` as a type. `{}` actually means "any non-nullish value".
+    "@typescript-eslint/ban-types": [
+      "error",
+      {
+        "extendDefaults": true,
+        "types": {
+          "{}": false
+        }
+      }
+    ]
+  }
+}
