@@ -5,7 +5,7 @@ const withPWA = require('next-pwa')({
   register: true,
   skipWaiting: true,
   runtimeCaching,
-  buildExcludes: [/manifest.json$/]
+  buildExcludes: [/middleware-manifest.json$/]
 })
 
 const nextConfig = withPWA({
