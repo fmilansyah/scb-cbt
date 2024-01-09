@@ -3,10 +3,13 @@ import { PaginateResponse } from '@/@core/domain/entities/response/paginate.resp
 import { NetworkService } from '@/shared/constants/network'
 import { AxiosInstance } from 'axios'
 import {
-  Exam,
+  AnswerRequest,
+  Exam, ExamDetail, ExamDetailRequest, ExamLsData,
 } from '@/@core/domain/entities/exam'
 import { ExamListRequest } from '@/@core/domain/entities/exam'
 import { ExamGateway } from '@/@core/domain/gateways/exam.gateway'
+import { StorageConst } from '@/shared/constants/storage'
+import Cookies from 'js-cookie'
 
 export class ExamHttpGateway implements ExamGateway {
   constructor(private http: AxiosInstance) {
@@ -24,5 +27,44 @@ export class ExamHttpGateway implements ExamGateway {
       )
       .then((resp) => resp.data)
       .catch((err) => err.response.data)
+  }
+  async view(
+    token: string,
+    params: ExamDetailRequest
+  ): Promise<BaseResponse<ExamDetail>> {
+    return this.http
+      .get<BaseResponse<ExamDetail>>(
+        `/cbt/dashboard-exam/view-exam/${token}`,
+        {
+          params,
+        }
+      )
+      .then((resp) => resp.data)
+      .catch((err) => err.response.data)
+  }
+  async submitAnswer(
+    params: AnswerRequest
+  ): Promise<BaseResponse<null>> {
+    return this.http
+      .put<BaseResponse<null>>(
+        `/cbt/dashboard-exam/send-result`, params
+      )
+      .then((resp) => resp.data)
+      .catch((err) => err.response.data)
+  }
+
+  saveExam(data: ExamLsData): void {
+    Cookies.set(StorageConst.ExamKey, JSON.stringify(data), {
+      expires: new Date(data.exam_end_at),
+    })
+  }
+
+  getExam(): ExamLsData | null {
+    const examCookie = Cookies.get(StorageConst.ExamKey)
+    if (examCookie) {
+      const examData: ExamLsData = JSON.parse(examCookie)
+      return examData
+    }
+    return null
   }
 }

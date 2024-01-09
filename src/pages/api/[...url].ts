@@ -36,8 +36,8 @@ export default function handler(
     headers: {
       ...{
         'x-api-key': process.env.API_KEY,
-        platform: Platform,
         subdomain: 'smkqelopak',
+        platform: Platform,
         Authorization: req.headers.authorization,
         'Content-Type': req.headers['content-type'],
       },

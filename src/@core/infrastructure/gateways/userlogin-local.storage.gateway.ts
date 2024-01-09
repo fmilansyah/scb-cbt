@@ -22,7 +22,9 @@ export class UserLoginLocalStorageGateway implements UserLoginGateway {
   }
 
   store(user: UserClient): void {
-    Cookies.set(StorageConst.UserKey, user?.token)
+    Cookies.set(StorageConst.UserKey, user?.token, {
+      expires: 0.5,
+    })
     localStorage.setItem(StorageConst.UserKey, JSON.stringify(user))
   }
 

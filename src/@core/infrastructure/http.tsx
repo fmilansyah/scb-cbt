@@ -1,6 +1,8 @@
 import { StorageConst } from '@/shared/constants/storage'
 import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import Cookies from 'js-cookie'
+import Swal from 'sweetalert2'
+import { BaseResponse } from '../domain/entities/response/base.response'
 
 export const http: AxiosInstance = axios.create({
   baseURL: `/api`,
@@ -23,11 +25,26 @@ const onRequestError = (error: AxiosError): Promise<AxiosError> => {
 http.interceptors.request.use(onRequest, onRequestError)
 
 const onResponse = (response: AxiosResponse): AxiosResponse => {
-  console.info(`[response] [${JSON.stringify(response)}]`)
   return response
 }
-const onResponseError = (error: AxiosError): Promise<AxiosError> => {
-  console.error(`[response error] [${JSON.stringify(error)}]`)
+const onResponseError = (error: AxiosError<BaseResponse<any>>): Promise<AxiosError> => {
+  let color = 'danger'
+  if (error?.response?.status === 401 || error?.response?.status === 403) {
+    color = 'warning'
+  }
+  const toast = Swal.mixin({
+    toast: true,
+    position: 'bottom-end',
+    showConfirmButton: false,
+    timer: 3000,
+    showCloseButton: true,
+    customClass: {
+      popup: `color-${color}`,
+    },
+  });
+  toast.fire({
+    title: error?.response?.data?.message,
+  });
   return Promise.reject(error)
 }
 http.interceptors.response.use(onResponse, onResponseError)

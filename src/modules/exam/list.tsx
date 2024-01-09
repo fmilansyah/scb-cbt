@@ -9,7 +9,8 @@ import dayjs from 'dayjs';
 import { serialize } from '@/shared/utils/normalize';
 import { PAGE_SIZES } from '@/shared/constants/theme';
 import { isKeyNotAvailable } from '@/shared/utils/formatter';
-import { Table } from '@/components/Elements';
+import { Button, Table } from '@/components/Elements';
+import Link from 'next/link';
 
 const ExamList = () => {
   const router = useRouter()
@@ -54,6 +55,16 @@ const ExamList = () => {
     },
     { accessor: 'start_time', title: 'Jam Mulai' },
     { accessor: 'end_time', title: 'Jam Selesai' },
+    {
+      accessor: 'accessor',
+      render: (record: Exam) => {
+        return (
+          <Link href={`/exam/${record?.id}/verify-token`}>
+            <Button rounded={true} type='primary'>Kerjakan</Button>
+          </Link>
+        )
+      }
+    }
   ]
 
   const handleTableChange = (params: ExamListRequest) => {
@@ -70,6 +81,19 @@ const ExamList = () => {
 
   return (
     <div>
+      <form>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-3">
+          <div>
+            <input type="text" name="title" defaultValue={router?.query?.title} placeholder="Sesi Ujian" className="form-input" />
+          </div>
+          <div>
+            <input type="text" name="exam_name" defaultValue={router?.query?.exam_name} placeholder="Nama Ujian" className="form-input" />
+          </div>
+          <div>
+            <Button htmlType='submit'>Cari</Button>
+          </div>
+        </div>
+      </form>
       <div className="datatables">
         <Table<Exam>
           records={data?.data ?? []}

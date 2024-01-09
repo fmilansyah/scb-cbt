@@ -10,6 +10,9 @@ interface Props {
   block?: boolean
   style?: CSSProperties
   className?: string
+  loading?: boolean
+  disabled?: boolean
+  onClick?: () => void
 }
 
 const Button = ({
@@ -22,13 +25,21 @@ const Button = ({
   block,
   style,
   className,
+  loading,
+  onClick,
+  disabled,
 }: Props) => {
   return (
     <button
       type={htmlType}
       className={`btn ${outline ? 'btn-outline' : 'btn'}-${type} ${rounded ? 'rounded-full' : ''} ${size !== 'md' ? 'btn-'+size : ''} ${block ? 'w-full' : ''} ${className}`}
       style={style}
+      disabled={loading || disabled}
+      onClick={onClick}
     >
+      {loading && (
+        <span className="animate-spin border-2 border-white border-l-transparent rounded-full w-5 h-5 ltr:mr-4 rtl:ml-4 inline-block align-middle"></span>
+      )}
       {children}
     </button>
   )
@@ -44,6 +55,8 @@ Button.defaultProps = {
   block: false,
   style: {},
   className: '',
+  loading: false,
+  disabled: false,
 }
 
 export default Button

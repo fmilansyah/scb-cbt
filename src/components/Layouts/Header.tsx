@@ -6,7 +6,7 @@ import IconMenu from '@/components/Icon/IconMenu';
 import IconSun from '@/components/Icon/IconSun';
 import IconMoon from '@/components/Icon/IconMoon';
 import IconLaptop from '@/components/Icon/IconLaptop';
-import IconUser from '@/components/Icon/IconUser';
+// import IconUser from '@/components/Icon/IconUser';
 import IconLogout from '@/components/Icon/IconLogout';
 import { BaseContext } from '@/context/base.provider';
 import IconBellBing from '../Icon/IconBellBing';
@@ -171,14 +171,14 @@ const Header = () => {
                       </div>
                     </div>
                   </li>
-                  <li>
+                  {/* <li>
                     <Link href="/users/profile" className="dark:hover:text-white">
                       <IconUser className="h-4.5 w-4.5 shrink-0 ltr:mr-2 rtl:ml-2" />
                       Pengaturan Profil
                     </Link>
-                  </li>
+                  </li> */}
                   <li className="border-t border-white-light dark:border-white-light/10">
-                    <Link href="/auth/boxed-signin" className="!py-3 text-danger">
+                    <Link href="/auth/logout" className="!py-3 text-danger">
                       <IconLogout className="h-4.5 w-4.5 shrink-0 rotate-90 ltr:mr-2 rtl:ml-2" />
                       Keluar
                     </Link>
@@ -191,12 +191,12 @@ const Header = () => {
 
         <ul className="horizontal-menu hidden border-t border-[#ebedf2] bg-white px-6 font-semibold text-black rtl:space-x-reverse dark:border-[#191e3a] dark:bg-black dark:text-white-dark lg:space-x-1.5 xl:space-x-8">
           <li className="menu nav-item relative">
-            <a href="" className="nav-link">
+            <Link href="/" className="nav-link">
               <div className="flex items-center">
                 <IconMenuDashboard className="shrink-0" />
                 <span className="px-1">Dashboard</span>
               </div>
-            </a>
+            </Link>
           </li>
         </ul>
       </div>

@@ -41,6 +41,7 @@
     "react-apexcharts": "^1.4.0",
     "react-click-away-listener": "^2.2.2",
     "react-copy-to-clipboard": "^5.1.0",
+    "react-countdown": "^2.3.5",
     "react-countup": "^6.4.1",
     "react-dom": "18.2.0",
     "react-export-table-to-excel": "^1.0.6",

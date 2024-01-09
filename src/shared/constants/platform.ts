@@ -1,1 +1,1 @@
-export const Platform = 'dashboard'
+export const Platform = 'exam'
