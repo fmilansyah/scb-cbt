@@ -5,12 +5,15 @@ import { Registry, container } from '@/@core/infrastructure/container-registry';
 import { NetworkStatus } from '@/shared/constants/network';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import dayjs from 'dayjs';
 import { serialize } from '@/shared/utils/normalize';
 import { PAGE_SIZES } from '@/shared/constants/theme';
 import { isKeyNotAvailable } from '@/shared/utils/formatter';
 import { Button, Table } from '@/components/Elements';
 import Link from 'next/link';
+import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
+
+dayjs.extend(isBetween)
 
 const ExamList = () => {
   const router = useRouter()
@@ -48,7 +51,7 @@ const ExamList = () => {
     {
       accessor: 'date', title: 'Tanggal', render: (record: Exam) => {
         if (record?.date) {
-          return dayjs(record?.date, 'YYYY-MM-DD').format('DD/MM/YYYY')
+          return dayjs(record?.date, 'YYYY-MM-DD').format('DD MMM YYYY')
         }
         return
       }
@@ -57,11 +60,18 @@ const ExamList = () => {
     { accessor: 'end_time', title: 'Jam Selesai' },
     {
       accessor: 'accessor',
+      title: 'Aksi',
       render: (record: Exam) => {
-        return (
+        const date = dayjs(record.date, 'YYYY-MM-DDTHH:mm:ssZ').format('YYYY-MM-DD')
+        return dayjs().isBetween(
+          dayjs(date + ' ' + record.start_time, 'YYYY-MM-DD HH:mm:ss'),
+          dayjs(date + ' ' + record.end_time, 'YYYY-MM-DD HH:mm:ss')
+        ) ? (
           <Link href={`/exam/${record?.id}/verify-token`}>
             <Button rounded={true} type='primary'>Kerjakan</Button>
           </Link>
+        ) : (
+          <Button rounded={true} type='primary' disabled={true}>Kerjakan</Button>
         )
       }
     }

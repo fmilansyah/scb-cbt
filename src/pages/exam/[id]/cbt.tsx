@@ -22,6 +22,10 @@ const Cbt = () => {
   useEffect(() => {
     getExam()
 
+    const timer = setTimeout(() => {
+      openFullScreen()
+    }, 2000);
+
     // Prevent fraud
     const handleKeydown = (e: any) => {
       e = e || window.event;
@@ -51,11 +55,21 @@ const Cbt = () => {
       false
     );
     return () => {
+      clearTimeout(timer);
       document.removeEventListener('keydown', handleKeydown);
       document.removeEventListener('contextmenu', handlePreventDefault);
       document.removeEventListener('copy', handlePreventDefault);
     }
   }, [])
+
+  const openFullScreen = () => {
+    let elem = document.getElementById('__next');
+    if (elem) {
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      }
+    }
+  }
 
   const getExam = async () => {
     const exec = await useCase.view(router?.query?.token as string, { exam_session_id: router?.query?.id as unknown as number })

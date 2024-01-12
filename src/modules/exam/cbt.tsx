@@ -209,11 +209,11 @@ const ExamCbt = ({ data, examLsData }: Props) => {
           {submitLoading && index === currentQuestion ? (
             <IconLoader className="w-4.5 h-4.5 shrink-0 animate-spin" />
           ) : (examLs?.questions[index]?.time_left ?? 0) < 1 ? (
-            <IconLock className="w-4.5 h-4.5 text-danger shrink-0" />
+            <IconLock className={`w-4.5 h-4.5 ${isKeyAvailable(examLs?.questions[index]?.user_answers) && Array.isArray(examLs?.questions[index]?.user_answers) && (examLs?.questions[index]?.user_answers ?? []).length > 0 ? 'text-success' : 'text-danger'} shrink-0`} />
           ) : examLs?.questions[index]?.opened ? (
-            <IconTxtFile className="w-4.5 h-4.5 shrink-0" />
+            <IconTxtFile className={`w-4.5 h-4.5 ${isKeyAvailable(examLs?.questions[index]?.user_answers) && Array.isArray(examLs?.questions[index]?.user_answers) && (examLs?.questions[index]?.user_answers ?? []).length > 0 ? 'text-success' : 'text-danger'} shrink-0`} />
           ) : (
-            <IconLock className="w-4.5 h-4.5 shrink-0" />
+            <IconLock className={`w-4.5 h-4.5 ${isKeyAvailable(examLs?.questions[index]?.user_answers) && Array.isArray(examLs?.questions[index]?.user_answers) && (examLs?.questions[index]?.user_answers ?? []).length > 0 ? 'text-success' : 'text-danger'} shrink-0`} />
           )}
           <div className="ltr:ml-3 rtl:mr-3">Soal No. {index + 1}</div>
         </div>
@@ -341,7 +341,7 @@ const ExamCbt = ({ data, examLsData }: Props) => {
             <div className="mb-5 h-px w-full border-b border-white-light dark:border-[#1b2e4b]"></div>
 
             <PerfectScrollbar className="relative h-full grow ltr:-mr-3.5 ltr:pr-3.5 rtl:-ml-3.5 rtl:pl-3.5">
-              <div className="text-lg pb-5">{data?.questions[currentQuestion]?.question}</div>
+              <div className="text-lg pb-5" dangerouslySetInnerHTML={{ __html: (data?.questions[currentQuestion]?.question ?? '') }}></div>
 
               <form className="space-y-5 px-5">
                 {data?.questions[currentQuestion]?.question_answers?.map((obj, index) => (
@@ -367,9 +367,9 @@ const ExamCbt = ({ data, examLsData }: Props) => {
                 <div className="font-bold text-[#0b549e]">Soal No. {currentQuestion + 1}</div>
                 <div className="flex items-center justify-end">
                   <Button
-                    disabled={(examLs?.questions[currentQuestion]?.time_left ?? 0) <= 0}
+                    // disabled={(examLs?.questions[currentQuestion]?.time_left ?? 0) <= 0}
                     loading={submitLoading}
-                    onClick={() => handleNext()}
+                    onClick={() => handleNext((examLs?.questions[currentQuestion]?.time_left ?? 0) <= 0)}
                   >
                     {currentQuestion >= (data?.questions?.length ?? 0) - 1 ? 'Simpan' : 'Berikutnya'}
                   </Button>

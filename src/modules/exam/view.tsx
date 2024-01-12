@@ -15,6 +15,7 @@ const ViewExam = ({ data }: Props) => {
   const router = useRouter()
 
   const [confirmStartVisible, setConfirmStartVisible] = useState<boolean>(false)
+  const [iUnderstand, setIUnderstand] = useState<boolean>(false)
 
   const handleStart = () => {
     setConfirmStartVisible(true)
@@ -62,11 +63,15 @@ const ViewExam = ({ data }: Props) => {
                   </div>
                   <div className="p-5">
                     <p>Peraturan CBT</p>
+                    <label className="inline-flex mt-2">
+                      <input type="checkbox" className="form-checkbox rounded-full" checked={iUnderstand} onChange={({ target: { checked } }) => setIUnderstand(checked)} />
+                      <span className="text-sm">Saya telah membaca dan akan mematuhi dengan peraturan di atas</span>
+                    </label>
                     <div className="flex justify-end items-center mt-8">
                       <Button outline={true} type="danger" onClick={() => handleConfirmAction(false)}>
                         Batal
                       </Button>
-                      <Button onClick={() => handleConfirmAction(true)} className="ltr:ml-4 rtl:mr-4">
+                      <Button onClick={() => handleConfirmAction(true)} disabled={!iUnderstand} className="ltr:ml-4 rtl:mr-4">
                         Saya mengerti
                       </Button>
                     </div>
@@ -101,7 +106,7 @@ const ViewExam = ({ data }: Props) => {
       <div>
         <strong>Waktu Ujian</strong>
         <div className="ml-3 mb-3">
-          Tanggal : {data?.date ? dayjs(data?.date, 'YYYY-MM-DDTHH:mm:ss[Z]').format('DD/MM/YYYY') : '-' }
+          Tanggal : {data?.date ? dayjs(data?.date, 'YYYY-MM-DDTHH:mm:ss[Z]').format('DD MMM YYYY') : '-' }
           <br />
           Jam : {data?.start_time && data?.end_time ? data?.start_time + ' - ' + data?.end_time : '-' }
         </div>
