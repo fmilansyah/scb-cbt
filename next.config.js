@@ -4,9 +4,8 @@ const withPWA = require('next-pwa')({
   dest: "public",
   register: true,
   skipWaiting: true,
-  disable: true,
-  // runtimeCaching,
-  // buildExcludes: [/middleware-manifest.json$/]
+  runtimeCaching,
+  buildExcludes: [/middleware-manifest.json$/]
 })
 
 const nextConfig = withPWA({
