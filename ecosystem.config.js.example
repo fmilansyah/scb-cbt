@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: 'smart-school-assessment',
+      name: 'neo-school-assessment',
       // exec_mode: 'cluster',
       instances: 3,
       autorestart: true,

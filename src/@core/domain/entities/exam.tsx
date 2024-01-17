@@ -58,6 +58,7 @@ export type ExamDetail = {
   created_by?: number
   updated_at?: string
   updated_by?: number
+  question_type: number
   questions: Questions[]
 }
 

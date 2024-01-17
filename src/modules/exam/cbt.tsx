@@ -19,6 +19,7 @@ import { useRouter } from "next/router";
 import IconLoader from "@/components/Icon/IconLoader";
 import { Dialog, Transition } from "@headlessui/react";
 import IconX from "@/components/Icon/IconX";
+import { QuestionType } from "@/shared/constants/enums";
 
 interface Props {
   data?: ExamDetail
@@ -98,10 +99,13 @@ const ExamCbt = ({ data, examLsData }: Props) => {
       }
     }
     if (currentQuestion < (data?.questions ?? []).length - 1 || isKeyAvailable(destIndex)) {
-      setNow(Date.now())
       if (isKeyAvailable(destIndex)) {
+        if (destIndex !== currentQuestion) {
+          setNow(Date.now())
+        }
         setCurrentQuestion(destIndex ?? 0)
       } else {
+        setNow(Date.now())
         setCurrentQuestion(currentQuestion + 1)
       }
     }
@@ -152,7 +156,11 @@ const ExamCbt = ({ data, examLsData }: Props) => {
   }
 
   const handleChangeQuestion = (question: AnswerLsData | null | undefined, destIndex: number) => {
-    if (question && question?.opened) {
+    if (data?.question_type === QuestionType.Enum.SEQUENCE) {
+      if (question && question?.opened) {
+        handleNext(true, destIndex)
+      }
+    } else {
       handleNext(true, destIndex)
     }
   }
@@ -208,9 +216,9 @@ const ExamCbt = ({ data, examLsData }: Props) => {
         <div className="flex items-center">
           {submitLoading && index === currentQuestion ? (
             <IconLoader className="w-4.5 h-4.5 shrink-0 animate-spin" />
-          ) : (examLs?.questions[index]?.time_left ?? 0) < 1 ? (
+          ) : (examLs?.questions[index]?.time_left ?? 0) < 1 && data?.question_type === QuestionType.Enum.SEQUENCE ? (
             <IconLock className={`w-4.5 h-4.5 ${isKeyAvailable(examLs?.questions[index]?.user_answers) && Array.isArray(examLs?.questions[index]?.user_answers) && (examLs?.questions[index]?.user_answers ?? []).length > 0 ? 'text-success' : 'text-danger'} shrink-0`} />
-          ) : examLs?.questions[index]?.opened ? (
+          ) : examLs?.questions[index]?.opened || data?.question_type === QuestionType.Enum.NOT_SEQUENCE ? (
             <IconTxtFile className={`w-4.5 h-4.5 ${isKeyAvailable(examLs?.questions[index]?.user_answers) && Array.isArray(examLs?.questions[index]?.user_answers) && (examLs?.questions[index]?.user_answers ?? []).length > 0 ? 'text-success' : 'text-danger'} shrink-0`} />
           ) : (
             <IconLock className={`w-4.5 h-4.5 ${isKeyAvailable(examLs?.questions[index]?.user_answers) && Array.isArray(examLs?.questions[index]?.user_answers) && (examLs?.questions[index]?.user_answers ?? []).length > 0 ? 'text-success' : 'text-danger'} shrink-0`} />

@@ -63,14 +63,21 @@ const ExamList = () => {
       title: 'Aksi',
       render: (record: Exam) => {
         const date = dayjs(record.date, 'YYYY-MM-DDTHH:mm:ssZ').format('YYYY-MM-DD')
-        return dayjs().isBetween(
+        if (dayjs().isBetween(
           dayjs(date + ' ' + record.start_time, 'YYYY-MM-DD HH:mm:ss'),
           dayjs(date + ' ' + record.end_time, 'YYYY-MM-DD HH:mm:ss')
-        ) ? (
-          <Link href={`/exam/${record?.id}/verify-token`}>
-            <Button rounded={true} type='primary'>Kerjakan</Button>
-          </Link>
-        ) : (
+        )) {
+          return (
+            <Link href={`/exam/${record?.id}/verify-token`}>
+              <Button rounded={true} type="primary">Kerjakan</Button>
+            </Link>
+          )
+        } else if (dayjs().isAfter(dayjs(date + ' ' + record.end_time, 'YYYY-MM-DD HH:mm:ss'))) {
+          return <Button rounded={true} type="danger" disabled={true}>Kadaluarsa</Button>
+        } else if (dayjs().isBefore(dayjs(date + ' ' + record.start_time, 'YYYY-MM-DD HH:mm:ss'))) {
+          return <Button rounded={true} type="warning" disabled={true}>Belum Dimulai</Button>
+        }
+        return (
           <Button rounded={true} type='primary' disabled={true}>Kerjakan</Button>
         )
       }
