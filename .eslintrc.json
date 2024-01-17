@@ -10,7 +10,7 @@
     "@typescript-eslint/no-explicit-any": "off",
     "@next/next/no-img-element": "off",
     "prefer-const": "off",
-    "@typescript-eslint/no-var-requires": "warning",
+    "@typescript-eslint/no-var-requires": "warn",
 
     // ./src/pages/_app.tsx
     // 10:36  Error: Don't use `{}` as a type. `{}` actually means "any non-nullish value".
