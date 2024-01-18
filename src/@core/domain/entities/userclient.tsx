@@ -4,6 +4,7 @@ export type UserClient = {
 }
 
 export type UserClientDetail = {
+  id?: number
   name?: string
   code?: string
 }

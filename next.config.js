@@ -13,6 +13,8 @@ const nextConfig = withPWA({
   },
   env: {
     APP_NAME: process.env.APP_NAME,
+    SOCKET_URL: process.env.SOCKET_URL,
+    ENCRYPTION_KEY: process.env.ENCRYPTION_KEY,
   },
 })
 

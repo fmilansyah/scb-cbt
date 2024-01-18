@@ -5,13 +5,17 @@ import BlankLayout from '@/components/Layouts/BlankLayout'
 import { NetworkStatus } from '@/shared/constants/network'
 import { Skeleton } from '@mantine/core'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import ExamCbt from '@/modules/exam/cbt'
 import { isKeyNotAvailable } from '@/shared/utils/formatter'
 import dayjs from 'dayjs'
+import { socket } from '@/@core/infrastructure/socket'
+import { md5 } from '@/shared/utils/encryption'
+import { BaseContext } from '@/context/base.provider'
 
 const Cbt = () => {
   const router = useRouter()
+  const baseContext = useContext(BaseContext)
   const useCase = container.get<ExamUseCase>(Registry.ExamUseCase)
 
   // Menampung data dari api
@@ -56,6 +60,24 @@ const Cbt = () => {
       document.removeEventListener('copy', handlePreventDefault);
     }
   }, [])
+
+  useEffect(() => {
+    if (!router.isReady) return
+
+    socket.io.opts.query = { token: md5(String(baseContext?.user?.detail?.id)) }
+    socket.connect()
+
+    const onBlocked = () => {
+      router.replace('/forbidden')
+    }
+
+    socket.on('blocked', onBlocked)
+
+    return () => {
+      socket.off('blocked', onBlocked)
+      socket.disconnect()
+    }
+  }, [router.isReady])
 
   const getExam = async () => {
     const exec = await useCase.view(router?.query?.token as string, { exam_session_id: router?.query?.id as unknown as number })
