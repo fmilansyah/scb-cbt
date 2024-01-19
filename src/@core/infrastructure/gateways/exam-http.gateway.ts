@@ -4,7 +4,14 @@ import { NetworkService } from '@/shared/constants/network'
 import { AxiosInstance } from 'axios'
 import {
   AnswerRequest,
-  Exam, ExamDetail, ExamDetailRequest, ExamLsData,
+  Exam,
+  ExamDetail,
+  ExamDetailRequest,
+  ExamLsData,
+  Questions,
+  QuestionsRequestData,
+  SendTimeLeftRequest,
+  StartExamRequest,
 } from '@/@core/domain/entities/exam'
 import { ExamListRequest } from '@/@core/domain/entities/exam'
 import { ExamGateway } from '@/@core/domain/gateways/exam.gateway'
@@ -66,5 +73,41 @@ export class ExamHttpGateway implements ExamGateway {
       return examData
     }
     return null
+  }
+
+  async viewQuestion(
+    params: QuestionsRequestData
+  ): Promise<BaseResponse<Questions[] | null>> {
+    return this.http
+      .get<BaseResponse<Questions[] | null>>(
+        '/cbt/dashboard-exam/view-question',
+        {
+          params,
+        }
+      )
+      .then((resp) => resp.data)
+      .catch((err) => err.response.data)
+  }
+
+  async startExam(
+    params: StartExamRequest
+  ): Promise<BaseResponse<null>> {
+    return this.http
+      .put<BaseResponse<null>>(
+        `/cbt/dashboard-exam/start-exam`, params
+      )
+      .then((resp) => resp.data)
+      .catch((err) => err.response.data)
+  }
+
+  async sendTimeLeft(
+    params: SendTimeLeftRequest
+  ): Promise<BaseResponse<null>> {
+    return this.http
+      .put<BaseResponse<null>>(
+        `/cbt/dashboard-exam/send-time-left`, params
+      )
+      .then((resp) => resp.data)
+      .catch((err) => err.response.data)
   }
 }

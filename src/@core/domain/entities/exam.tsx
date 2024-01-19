@@ -39,6 +39,21 @@ export type Questions = {
   course?: Course
   question_answers?: Answers[]
   user_answers?: number[] | null
+  time_left: number | null
+  opened: boolean | null
+}
+
+export type QuestionPackage = {
+  id: number
+  exam_id: number
+  question_package_id: number
+  question_package_code: string
+  question_package_name: string
+  course_id: number
+  course_code: string
+  course_name: string
+  duration: number
+  order: number
 }
 
 export type ExamDetail = {
@@ -60,6 +75,7 @@ export type ExamDetail = {
   updated_by?: number
   question_type: number
   questions: Questions[]
+  question_packages: QuestionPackage[]
 }
 
 export type AnswerRequest = {
@@ -83,4 +99,26 @@ export type AnswerLsData = {
   opened?: boolean
   user_answers?: number[] | null
   question_id?: number
+}
+
+export type QuestionsRequestData = {
+  exam_detail_id?: number
+  exam_session_detail_id?: number
+}
+
+export type StartExamRequest = {
+  exam_id?: number
+  exam_session_id?: number
+  exam_session_detail_id?: number
+}
+
+export type SendTimeLeftRequest = {
+  exam_session_id: number
+  exam_session_detail_id: number
+  question_package_id: number
+  question_id: number
+  course_id: number
+  time_left: number
+  opened: number
+  exp: number
 }

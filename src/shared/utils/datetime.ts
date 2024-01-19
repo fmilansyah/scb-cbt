@@ -4,3 +4,10 @@ export const millisecondToMinute = (millisecond: number = 0) => {
 
   return `${("0" + (totalMinutes % 60)).slice(-2)}:${("0" + (totalSeconds % 60)).slice(-2)}`
 }
+
+export const secondToMinute = (second: number = 0) => {
+  if (second > 60) {
+    return Math.round(second / 60)
+  }
+  return second
+}

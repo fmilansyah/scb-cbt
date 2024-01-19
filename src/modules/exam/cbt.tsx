@@ -67,8 +67,8 @@ const ExamCbt = ({ data, examLsData }: Props) => {
     // Validasi jika belum memilih jawaban dan masih ada waktu
     if (
       ((isKeyNotAvailable(examLs?.questions[currentQuestion]?.user_answers) ||
-      (examLs?.questions[currentQuestion]?.user_answers ?? []).length < 1)) &&
-      !outOfTime
+      (examLs?.questions[currentQuestion]?.user_answers ?? []).length < 1))
+      // !outOfTime
     ) {
       toast.fire({
         title: 'Jawaban harap dipilih',
@@ -76,7 +76,8 @@ const ExamCbt = ({ data, examLsData }: Props) => {
       return
     }
 
-    if (outOfTime && isKeyNotAvailable(destIndex)) {
+    if (isKeyNotAvailable(destIndex)) {
+    // if (outOfTime && isKeyNotAvailable(destIndex)) {
       handleTickingTime(0)
     }
 
@@ -107,6 +108,16 @@ const ExamCbt = ({ data, examLsData }: Props) => {
       } else {
         setNow(Date.now())
         setCurrentQuestion(currentQuestion + 1)
+      }
+    }
+    if (currentQuestion >= (data?.questions ?? []).length - 1) {
+      console.log(currentQuestion >= (data?.questions ?? []).length - 1)
+      const findIndex = data?.question_packages?.findIndex((obj) => obj.id == router?.query?.exam_detail_id)
+      console.log(findIndex, data?.question_packages, data?.question_packages[findIndex + 1]?.id)
+      if (findIndex >= 0 && data?.question_packages[findIndex + 1]?.id) {
+        window.document.location = `/exam/${router?.query?.id}/cbt?token=${router?.query?.token}&exam_detail_id=${data?.question_packages[findIndex + 1]?.id}&exam_session_detail_id=${data?.exam_session_detail_id}`
+      } else {
+        router.replace('/exam/finish')
       }
     }
   }
@@ -173,13 +184,13 @@ const ExamCbt = ({ data, examLsData }: Props) => {
   }
 
   const handleUpdateAnswer = (value: string = '') => {
-    if ((examLs?.questions[currentQuestion]?.time_left ?? 0) > 0) {
-      updateAnswer(value ? [parseInt(value)] : [])
-    } else {
-      toast.fire({
-        title: 'Waktu sudah habis! Jawaban tidak bisa diubah',
-      });
-    }
+    updateAnswer(value ? [parseInt(value)] : [])
+    // if ((examLs?.questions[currentQuestion]?.time_left ?? 0) > 0) {
+    // } else {
+    //   toast.fire({
+    //     title: 'Waktu sudah habis! Jawaban tidak bisa diubah',
+    //   });
+    // }
   }
 
   const renderCountdown = ({ minutes, seconds }: {

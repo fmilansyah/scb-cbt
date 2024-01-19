@@ -5,17 +5,21 @@ import BlankLayout from '@/components/Layouts/BlankLayout'
 import { NetworkStatus } from '@/shared/constants/network'
 import { Skeleton } from '@mantine/core'
 import { useRouter } from 'next/router'
-import { useContext, useEffect, useState } from 'react'
+import {
+  // useContext,
+  useEffect,
+  useState
+} from 'react'
 import ExamCbt from '@/modules/exam/cbt'
 import { isKeyNotAvailable } from '@/shared/utils/formatter'
 import dayjs from 'dayjs'
-import { socket } from '@/@core/infrastructure/socket'
-import { md5 } from '@/shared/utils/encryption'
-import { BaseContext } from '@/context/base.provider'
+// import { socket } from '@/@core/infrastructure/socket'
+// import { md5 } from '@/shared/utils/encryption'
+// import { BaseContext } from '@/context/base.provider'
 
 const Cbt = () => {
   const router = useRouter()
-  const baseContext = useContext(BaseContext)
+  // const baseContext = useContext(BaseContext)
   const useCase = container.get<ExamUseCase>(Registry.ExamUseCase)
 
   // Menampung data dari api
@@ -43,7 +47,7 @@ const Cbt = () => {
     const handlePreventDefault = (e: any) => {
       e.preventDefault();
     }
-    document.addEventListener('keydown', handleKeydown);
+    // document.addEventListener('keydown', handleKeydown);
     document.addEventListener(
       "contextmenu",
       handlePreventDefault,
@@ -61,35 +65,40 @@ const Cbt = () => {
     }
   }, [])
 
-  useEffect(() => {
-    if (!router.isReady) return
+  // useEffect(() => {
+  //   if (!router.isReady) return
 
-    socket.io.opts.query = { token: md5(String(baseContext?.user?.detail?.id)) }
-    socket.connect()
+  //   socket.io.opts.query = { token: md5(String(baseContext?.user?.detail?.id)) }
+  //   socket.connect()
 
-    const onBlocked = () => {
-      router.replace('/forbidden')
-    }
+  //   const onBlocked = () => {
+  //     router.replace('/forbidden')
+  //   }
 
-    socket.on('blocked', onBlocked)
+  //   socket.on('blocked', onBlocked)
 
-    return () => {
-      socket.off('blocked', onBlocked)
-      socket.disconnect()
-    }
-  }, [router.isReady])
+  //   return () => {
+  //     socket.off('blocked', onBlocked)
+  //     socket.disconnect()
+  //   }
+  // }, [router.isReady])
 
   const getExam = async () => {
     const exec = await useCase.view(router?.query?.token as string, { exam_session_id: router?.query?.id as unknown as number })
+    const questions = await useCase.viewQuestion({
+      exam_detail_id: router?.query?.exam_detail_id as unknown as number,
+      exam_session_detail_id: router?.query?.exam_session_detail_id as unknown as number,
+    })
     if (exec.status === NetworkStatus.SUCCESS && exec.data !== null) {
-      setData({ ...exec?.data, question_type: 2 })
+      const newData = { ...exec?.data, questions: (questions?.data ?? []), question_type: 2 }
+      setData(newData)
 
       // Simpan exam ke cookies jika belum ada atau berbeda token
       const newExamLsData = useCase.getExam()
       const params: ExamLsData = {
         token: router?.query?.token as string,
-        exam_end_at: dayjs(exec?.data?.date, 'YYYY-MM-DDTHH:mm:ssZ').format('YYYY-MM-DD') + ' ' + exec?.data?.end_time,
-        questions: (exec?.data?.questions ?? []).map((obj, index) => {
+        exam_end_at: dayjs(newData?.date, 'YYYY-MM-DDTHH:mm:ssZ').format('YYYY-MM-DD') + ' ' + exec?.data?.end_time,
+        questions: (newData?.questions ?? []).map((obj, index) => {
           const dataIndex: number = (newExamLsData?.questions ?? []).findIndex((exam) => exam?.question_id === obj?.id)
           return {
             time_left: dataIndex > -1 ? newExamLsData?.questions[dataIndex]?.time_left : obj.duration * 60000,
@@ -101,6 +110,8 @@ const Cbt = () => {
       }
       setExamLsData(params)
       useCase.saveExam(params)
+    } else {
+      router.replace('/')
     }
   }
 

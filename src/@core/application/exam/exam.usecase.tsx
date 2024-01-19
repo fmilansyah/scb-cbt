@@ -1,7 +1,7 @@
 import { BaseResponse } from '@/@core/domain/entities/response/base.response'
 import { PaginateResponse } from '@/@core/domain/entities/response/paginate.response'
 import { ExamGateway } from '@/@core/domain/gateways/exam.gateway'
-import { AnswerRequest, Exam, ExamDetail, ExamDetailRequest, ExamListRequest, ExamLsData } from '@/@core/domain/entities/exam'
+import { AnswerRequest, Exam, ExamDetail, ExamDetailRequest, ExamListRequest, ExamLsData, Questions, QuestionsRequestData, SendTimeLeftRequest, StartExamRequest } from '@/@core/domain/entities/exam'
 
 export class ExamUseCase {
   constructor(private gate: ExamGateway) {}
@@ -24,5 +24,17 @@ export class ExamUseCase {
 
   getExam(): ExamLsData | null {
     return this.gate.getExam()
+  }
+
+  async viewQuestion(params: QuestionsRequestData): Promise<BaseResponse<Questions[] | null>> {
+    return this.gate.viewQuestion(params)
+  }
+
+  async startExam(params: StartExamRequest): Promise<BaseResponse<null>> {
+    return this.gate.startExam(params)
+  }
+
+  async sendTimeLeft(params: SendTimeLeftRequest): Promise<BaseResponse<null>> {
+    return this.gate.sendTimeLeft(params)
   }
 }

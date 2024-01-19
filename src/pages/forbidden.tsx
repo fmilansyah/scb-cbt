@@ -15,7 +15,7 @@ const Forbidden = () => {
               <h2 className="mb-5 text-3xl font-bold text-[#03dec2] md:text-5xl">Akses Dilarang</h2>
               <h4 className="mb-7 text-xl sm:text-2xl">Kamu sedang mengerjakan ujian pada perangkat lain</h4>
             </div>
-            <Link href="/auth/logout" className="btn btn-gradient mx-auto !mt-7 w-max border-0 uppercase shadow-none">
+            <Link href="/" className="btn btn-gradient mx-auto !mt-7 w-max border-0 uppercase shadow-none">
               Keluar
             </Link>
         </div>
