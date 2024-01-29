@@ -26,6 +26,7 @@ const ViewExam = ({ data }: Props) => {
   const [iUnderstand, setIUnderstand] = useState<boolean>(false)
   const [infoActive, setInfoActive] = useState<string[]>(['1', '2', '3', '4'])
   const [startTime] = useState<string>(dayjs(data?.date, 'YYYY-MM-DDTHH:mm:ssZ').format('YYYY-MM-DD') + ' ' + (data?.start_time ?? ''))
+  const [endTime] = useState<string>(dayjs(data?.date, 'YYYY-MM-DDTHH:mm:ssZ').format('YYYY-MM-DD') + ' ' + (data?.end_time ?? ''))
   const [loading, setLoading] = useState<boolean>(false)
 
   const useCase = container.get<ExamUseCase>(Registry.ExamUseCase)
@@ -50,7 +51,16 @@ const ViewExam = ({ data }: Props) => {
     const exec = await useCase.startExam(params)
     setLoading(false)
     if (exec?.status === NetworkStatus.SUCCESS) {
-      router.replace(`/exam/${router?.query?.id}/cbt?token=${router?.query?.token}&exam_detail_id=${data?.question_packages[0]?.id}&exam_session_detail_id=${data?.exam_session_detail_id}`)
+      // const windowFeatures = `left=0,top=0,width=${screen.width},height=${screen.height}`;
+      // window.open(
+      //   `/exam/${router?.query?.id}/cbt?token=${router?.query?.token}&exam_session_detail_id=${data?.exam_session_detail_id}&exam_detail_id=${data?.question_packages[0]?.id ?? ''}`,
+      //   '_blank',
+      //   windowFeatures,
+      // );
+      // if (!handle) {
+        
+      // }
+      router.replace(`/exam/${router?.query?.id}/cbt?token=${router?.query?.token}&exam_session_detail_id=${data?.exam_session_detail_id}&exam_detail_id=${data?.question_packages[0]?.id ?? ''}`)
     }
   }
 
@@ -64,7 +74,7 @@ const ViewExam = ({ data }: Props) => {
               <IconClock className="text-[#0b549e]" />
               &nbsp;
               <p>
-                {secondToMinute(data?.duration)} Menit
+                {secondToMinute(data?.duration)}
               </p>
             </div>
           </div>
@@ -77,7 +87,7 @@ const ViewExam = ({ data }: Props) => {
         </div>
         <div className="text-right hidden md:block">
           <div className="text-primary">Waktu Pengerjaan</div>
-          <div className="mt-2 text-lg font-semibold">{data?.duration} Menit</div>
+          <div className="mt-2 text-lg font-semibold">{secondToMinute(data?.duration)}</div>
         </div>
       </div>
       <div className="space-y-2 font-semibold">
@@ -126,9 +136,20 @@ const ViewExam = ({ data }: Props) => {
                   Ujian Dimulai Dalam :
                   &nbsp;
                   <Countdown
+                    daysInHours={true}
                     date={Date.now() + dayjs(startTime).diff(dayjs())}
                   >
                     <span>Sudah Dimulai</span>
+                  </Countdown>
+                </div>
+                <div>
+                  Ujian Berakhir Dalam :
+                  &nbsp;
+                  <Countdown
+                    daysInHours={true}
+                    date={Date.now() + dayjs(endTime).diff(dayjs())}
+                  >
+                    <span>Sudah Berakhir</span>
                   </Countdown>
                 </div>
               </div>
@@ -193,7 +214,7 @@ const ViewExam = ({ data }: Props) => {
           <div>
             <AnimateHeight duration={300} height={infoActive.includes('4') ? 'auto' : 0}>
               <div className="space-y-2 p-4 border-t border-[#d3d3d3] dark:border-[#1b2e4b]">
-                <div dangerouslySetInnerHTML={{ __html: data?.description ?? '' }} />
+                <div dangerouslySetInnerHTML={{ __html: data?.description ?? 'Tidak ada keterangan' }} />
               </div>
             </AnimateHeight>
           </div>

@@ -4,19 +4,21 @@ import { NetworkService } from '@/shared/constants/network'
 import { AxiosInstance } from 'axios'
 import {
   AnswerRequest,
+  EndExamRequest,
   Exam,
   ExamDetail,
   ExamDetailRequest,
-  ExamLsData,
   Questions,
   QuestionsRequestData,
   SendTimeLeftRequest,
+  SendViolationEventRequest,
   StartExamRequest,
 } from '@/@core/domain/entities/exam'
 import { ExamListRequest } from '@/@core/domain/entities/exam'
 import { ExamGateway } from '@/@core/domain/gateways/exam.gateway'
 import { StorageConst } from '@/shared/constants/storage'
 import Cookies from 'js-cookie'
+import dayjs from 'dayjs'
 
 export class ExamHttpGateway implements ExamGateway {
   constructor(private http: AxiosInstance) {
@@ -60,16 +62,18 @@ export class ExamHttpGateway implements ExamGateway {
       .catch((err) => err.response.data)
   }
 
-  saveExam(data: ExamLsData): void {
-    Cookies.set(StorageConst.ExamKey, JSON.stringify(data), {
-      expires: new Date(data.exam_end_at),
-    })
+  saveExam(data?: ExamDetail): void {
+    if (data) {
+      Cookies.set(StorageConst.ExamKey, JSON.stringify(data), {
+        expires: new Date(dayjs(data?.date, 'YYYY-MM-DDTHH:mm:ssZ').format('YYYY-MM-DD') + ' ' + (data?.end_time ?? '')),
+      })
+    }
   }
 
-  getExam(): ExamLsData | null {
+  getExam(): ExamDetail | null {
     const examCookie = Cookies.get(StorageConst.ExamKey)
     if (examCookie) {
-      const examData: ExamLsData = JSON.parse(examCookie)
+      const examData: ExamDetail = JSON.parse(examCookie)
       return examData
     }
     return null
@@ -100,12 +104,45 @@ export class ExamHttpGateway implements ExamGateway {
       .catch((err) => err.response.data)
   }
 
+  async endExam(
+    params: EndExamRequest
+  ): Promise<BaseResponse<null>> {
+    return this.http
+      .put<BaseResponse<null>>(
+        `/cbt/dashboard-exam/end-exam`, params
+      )
+      .then((resp) => resp.data)
+      .catch((err) => err.response.data)
+  }
+
   async sendTimeLeft(
     params: SendTimeLeftRequest
   ): Promise<BaseResponse<null>> {
     return this.http
       .put<BaseResponse<null>>(
         `/cbt/dashboard-exam/send-time-left`, params
+      )
+      .then((resp) => resp.data)
+      .catch((err) => err.response.data)
+  }
+
+  async sendTimeLeftPackage(
+    params: SendTimeLeftRequest
+  ): Promise<BaseResponse<null>> {
+    return this.http
+      .put<BaseResponse<null>>(
+        `/cbt/dashboard-exam/send-time-left-session`, params
+      )
+      .then((resp) => resp.data)
+      .catch((err) => err.response.data)
+  }
+
+  async sendViolationEvent(
+    params: SendViolationEventRequest
+  ): Promise<BaseResponse<null>> {
+    return this.http
+      .put<BaseResponse<null>>(
+        '/cbt/dashboard-exam/send-violation-event', params
       )
       .then((resp) => resp.data)
       .catch((err) => err.response.data)

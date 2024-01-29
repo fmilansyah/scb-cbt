@@ -40,7 +40,7 @@ export type Questions = {
   question_answers?: Answers[]
   user_answers?: number[] | null
   time_left: number | null
-  opened: boolean | null
+  opened: number | null
 }
 
 export type QuestionPackage = {
@@ -54,6 +54,8 @@ export type QuestionPackage = {
   course_name: string
   duration: number
   order: number
+  time_left: number | null
+  opened: number | null
 }
 
 export type ExamDetail = {
@@ -112,13 +114,27 @@ export type StartExamRequest = {
   exam_session_detail_id?: number
 }
 
+export type EndExamRequest = {
+  exam_id?: number
+  exam_session_id?: number
+  exam_session_detail_id?: number
+}
+
 export type SendTimeLeftRequest = {
-  exam_session_id: number
-  exam_session_detail_id: number
-  question_package_id: number
-  question_id: number
-  course_id: number
-  time_left: number
+  exam_session_id?: number
+  exam_session_detail_id?: number
+  question_package_id?: number
+  question_id?: number
+  course_id?: number
+  time_left: number | null
   opened: number
   exp: number
+}
+
+export type SendViolationEventRequest = {
+  exam_session_id: number
+  exam_session_detail_id: number
+  code: string | null
+  event_name: string | null
+  description?: string | null
 }

@@ -49,7 +49,7 @@ export default function VerifyToken() {
               </div>
               <div className="mb-5">
                 <form onSubmit={handleCheckToken}>
-                  <input type="text" placeholder="Masukkan Token" className="form-input" required value={token} onChange={({ target: { value } }) => setToken(value)} />
+                <input type="text" placeholder="Masukkan Token" className="form-input" required value={token} onChange={({ target: { value } }) => setToken((value ?? '').toUpperCase())} />
                   <Button htmlType="submit" className="mt-6" loading={loading}>Cek Token</Button>
                 </form>
               </div>

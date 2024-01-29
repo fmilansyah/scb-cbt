@@ -26,6 +26,7 @@ export default function VerifyToken() {
     setLoading(false)
     if (exec.status === NetworkStatus.SUCCESS && exec.data !== null) {
       setData(exec?.data)
+      // useCase.saveExam(newData)
     }
   }
 

@@ -1,7 +1,7 @@
 import { BaseResponse } from '@/@core/domain/entities/response/base.response'
 import { PaginateResponse } from '@/@core/domain/entities/response/paginate.response'
 import { ExamGateway } from '@/@core/domain/gateways/exam.gateway'
-import { AnswerRequest, Exam, ExamDetail, ExamDetailRequest, ExamListRequest, ExamLsData, Questions, QuestionsRequestData, SendTimeLeftRequest, StartExamRequest } from '@/@core/domain/entities/exam'
+import { AnswerRequest, EndExamRequest, Exam, ExamDetail, ExamDetailRequest, ExamListRequest, Questions, QuestionsRequestData, SendTimeLeftRequest, SendViolationEventRequest, StartExamRequest } from '@/@core/domain/entities/exam'
 
 export class ExamUseCase {
   constructor(private gate: ExamGateway) {}
@@ -18,11 +18,11 @@ export class ExamUseCase {
     return this.gate.submitAnswer(params)
   }
 
-  saveExam(data: ExamLsData): void {
+  saveExam(data?: ExamDetail): void {
     return this.gate.saveExam(data)
   }
 
-  getExam(): ExamLsData | null {
+  getExam(): ExamDetail | null {
     return this.gate.getExam()
   }
 
@@ -34,7 +34,19 @@ export class ExamUseCase {
     return this.gate.startExam(params)
   }
 
+  async endExam(params: EndExamRequest): Promise<BaseResponse<null>> {
+    return this.gate.endExam(params)
+  }
+
   async sendTimeLeft(params: SendTimeLeftRequest): Promise<BaseResponse<null>> {
     return this.gate.sendTimeLeft(params)
+  }
+
+  async sendTimeLeftPackage(params: SendTimeLeftRequest): Promise<BaseResponse<null>> {
+    return this.gate.sendTimeLeftPackage(params)
+  }
+
+  async sendViolationEvent(params: SendViolationEventRequest): Promise<BaseResponse<null>> {
+    return this.gate.sendViolationEvent(params)
   }
 }

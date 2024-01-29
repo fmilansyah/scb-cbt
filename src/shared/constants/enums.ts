@@ -15,3 +15,35 @@ export const QuestionType = QuestionTypeEnum && {
     },
   ],
 }
+
+const DurationTypeEnum = {
+  PACKAGE: 'package',
+  QUESTION: 'question',
+}
+export const DurationType = DurationTypeEnum && {
+  Enum: DurationTypeEnum,
+  List: [
+    {
+      id: DurationTypeEnum.PACKAGE,
+      name: 'Paket Soal',
+    },
+    {
+      id: DurationTypeEnum.QUESTION,
+      name: 'Soal',
+    },
+  ],
+}
+
+const ViolationEventCodeEnum = {
+  MULTI_LOGIN: 'MLG',
+}
+export const ViolationEventCode = ViolationEventCodeEnum && {
+  Enum: ViolationEventCodeEnum,
+  List: [
+    {
+      id: ViolationEventCodeEnum.MULTI_LOGIN,
+      name: 'Multi Login',
+      description: 'Peserta ujian ini terdeteksi membuka ujian pada lebih dari 1 perangkat',
+    },
+  ],
+}
