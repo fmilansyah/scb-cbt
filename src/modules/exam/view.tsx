@@ -49,7 +49,6 @@ const ViewExam = ({ data }: Props) => {
       exam_session_detail_id: data?.exam_session_detail_id,
     }
     const exec = await useCase.startExam(params)
-    setLoading(false)
     if (exec?.status === NetworkStatus.SUCCESS) {
       // const windowFeatures = `left=0,top=0,width=${screen.width},height=${screen.height}`;
       // window.open(
@@ -60,8 +59,30 @@ const ViewExam = ({ data }: Props) => {
       // if (!handle) {
         
       // }
+      enterFullScreen()
       router.replace(`/exam/${router?.query?.id}/cbt?token=${router?.query?.token}&exam_session_detail_id=${data?.exam_session_detail_id}&exam_detail_id=${data?.question_packages[0]?.id ?? ''}`)
+    } else {
+      setLoading(false)
     }
+  }
+
+  const enterFullScreen = () => {
+    // Trigger fullscreen
+  const docElmWithBrowsersFullScreenFunctions = document.documentElement as HTMLElement & {
+    mozRequestFullScreen(): Promise<void>;
+    webkitRequestFullscreen(): Promise<void>;
+    msRequestFullscreen(): Promise<void>;
+  };
+
+  if (docElmWithBrowsersFullScreenFunctions.requestFullscreen) {
+    docElmWithBrowsersFullScreenFunctions.requestFullscreen();
+  } else if (docElmWithBrowsersFullScreenFunctions.mozRequestFullScreen) { /* Firefox */
+    docElmWithBrowsersFullScreenFunctions.mozRequestFullScreen();
+  } else if (docElmWithBrowsersFullScreenFunctions.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+    docElmWithBrowsersFullScreenFunctions.webkitRequestFullscreen();
+  } else if (docElmWithBrowsersFullScreenFunctions.msRequestFullscreen) { /* IE/Edge */
+    docElmWithBrowsersFullScreenFunctions.msRequestFullscreen();
+  }
   }
 
   return (

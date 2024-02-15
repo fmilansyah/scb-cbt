@@ -36,7 +36,6 @@ const toast = Swal.mixin({
 });
 
 const ExamCbt = ({ data, questions }: Props) => {
-  console.log(questions)
   const router = useRouter()
   const useCase = container.get<ExamUseCase>(Registry.ExamUseCase)
   const timeLeftRef = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -491,7 +490,7 @@ const ExamCbt = ({ data, questions }: Props) => {
 
   return (
     <>
-      <div className="mb-3">
+      <div className="mb-3 sm:block min-[320px]:hidden">
         <ol className="flex text-primary font-semibold dark:text-white-dark">
           <li className="bg-[#ebedf2] ltr:rounded-l-md rtl:rounded-r-md dark:bg-[#1b2e4b]">
             <button className="p-1.5 ltr:pl-3 rtl:pr-3 ltr:pr-2 rtl:pl-2 relative  h-full flex items-center before:absolute ltr:before:-right-[15px] rtl:before:-left-[15px] rtl:before:rotate-180 before:inset-y-0 before:m-auto before:w-0 before:h-0 before:border-[16px] before:border-l-[15px] before:border-r-0 before:border-t-transparent before:border-b-transparent before:border-l-[#ebedf2] before:z-[1] dark:before:border-l-[#1b2e4b] hover:text-primary/70 dark:hover:text-white-dark/70">

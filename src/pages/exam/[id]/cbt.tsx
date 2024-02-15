@@ -58,6 +58,12 @@ const Cbt = () => {
     const handlePreventDefault = (e: any) => {
       e.preventDefault();
     }
+    const handleFullScreenChange = () => {
+      sendViolation(ViolationEventCode.Enum.FULL_SCREEN)
+    }
+    const handleLostFocus = () => {
+      sendViolation(ViolationEventCode.Enum.LOST_FOCUS)
+    }
     document.addEventListener('keydown', handleKeydown);
     document.addEventListener(
       "contextmenu",
@@ -69,10 +75,14 @@ const Cbt = () => {
       handlePreventDefault,
       false
     );
+    document.addEventListener("fullscreenchange", handleFullScreenChange);
+    window.addEventListener("blur", handleLostFocus);
     return () => {
       document.removeEventListener('keydown', handleKeydown);
       document.removeEventListener('contextmenu', handlePreventDefault);
       document.removeEventListener('copy', handlePreventDefault);
+      document.removeEventListener("fullscreenchange", handleFullScreenChange);
+      window.removeEventListener("blur", handleLostFocus);
     }
   }, [])
 
@@ -91,7 +101,7 @@ const Cbt = () => {
         event_name: violationData.name,
         description: violationData.description,
       }
-      const exec = await useCase.sendViolationEvent(params)
+      const exec = await sendViolation(ViolationEventCode.Enum.MULTI_LOGIN)
       if (exec?.status === NetworkStatus.SUCCESS) {
         toast.fire({
           title: params.description ?? '',
@@ -111,6 +121,19 @@ const Cbt = () => {
   useEffect(() => {
     getExam()
   }, [router.query])
+
+  const sendViolation = async (code: string) => {
+    const violationData = getViolationData(code)
+    const params: SendViolationEventRequest = {
+      exam_session_id: parseInt(router?.query?.id as string),
+      exam_session_detail_id: parseInt(router?.query?.exam_session_detail_id as string),
+      code: violationData.code,
+      event_name: violationData.name,
+      description: violationData.description,
+    }
+    const exec = await useCase.sendViolationEvent(params)
+    return exec
+  }
 
   const getExam = async () => {
     const examSessionDetailId = router?.query?.exam_session_detail_id as unknown as string
